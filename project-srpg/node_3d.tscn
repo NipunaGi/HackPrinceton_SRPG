@@ -3,7 +3,7 @@
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4xowi"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a202f"]
-size = Vector3(126.11476, 3.4095576, 153.27661)
+size = Vector3(228.69275, 3.4095576, 232.69897)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4xowi"]
 albedo_color = Color(0.37546313, 0.61836404, 0.85710955, 1)
@@ -22,7 +22,7 @@ transform = Transform3D(1, 0, 0, 0, 0.887727, -0.4603702, 0, 0.46037018, 0.88772
 physics_material_override = SubResource("PhysicsMaterial_4xowi")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.963281, -1.3735331, -34.20539)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6331024, -1.3735331, 5.5057907)
 shape = SubResource("BoxShape3D_a202f")
 debug_color = Color(1, 1, 1, 0.41960785)
 
