@@ -1,0 +1,63 @@
+[gd_scene load_steps=9 format=3 uid="uid://dqkpc1ym06crh"]
+
+[ext_resource type="Script" uid="uid://cgso6b777sf82" path="res://Scripts/Player.gd" id="1_a202f"]
+[ext_resource type="Script" uid="uid://6x73jqbnk6om" path="res://Scripts/CameraSpringArm.gd" id="2_noarx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4xowi"]
+albedo_color = Color(0.1254902, 0.53333336, 0.11764706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a202f"]
+material = SubResource("StandardMaterial3D_4xowi")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_noarx"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_a0tk4"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_r3fl7"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_jka67"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Map" type="Node3D" parent="."]
+
+[node name="Floor" type="MeshInstance3D" parent="Map"]
+transform = Transform3D(50.173943, 0, 0, 0, 1.0034789, 0, 0, 0, 50.173943, -0.0062093735, 4.7683716e-07, -0.0018882751)
+mesh = SubResource("BoxMesh_a202f")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Map/Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Floor/StaticBody3D"]
+shape = SubResource("BoxShape3D_noarx")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50696397, 0)
+script = ExtResource("1_a202f")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_a0tk4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_r3fl7")
+
+[node name="RayCast3D" type="RayCast3D" parent="Player"]
+
+[node name="Weapon" type="Node3D" parent="Player"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/Weapon"]
+transform = Transform3D(0.4, 0, 0, 0, 0.2, 0, 0, 0, 1, 0.30747503, 0.83155465, -0.6261928)
+mesh = SubResource("BoxMesh_jka67")
+
+[node name="CameraSpringArm" type="SpringArm3D" parent="." node_paths=PackedStringArray("player")]
+transform = Transform3D(0.8660254, 0.35355338, 0.35355338, 0, 0.70710677, -0.70710677, -0.5, 0.6123724, 0.6123724, 0, 7.5216584, 0)
+spring_length = -15.0
+script = ExtResource("2_noarx")
+player = NodePath("../Player")
+
+[node name="Camera3D" type="Camera3D" parent="CameraSpringArm"]
+transform = Transform3D(-1, 5.9604645e-08, -1.1920929e-07, 2.9802322e-08, 1.0000001, 0, 8.940697e-08, 0, -1.0000001, 0.3696588, -0.619267, 0.9210925)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-5.9604645e-08, -0.86602545, 0.49999994, -1.4901161e-08, 0.49999994, 0.86602545, -1, 5.9604645e-08, -1.4901161e-08, 10, 7, 2)
