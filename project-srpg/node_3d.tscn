@@ -3,27 +3,28 @@
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4xowi"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a202f"]
-size = Vector3(8.433105, 1, 9.401428)
+size = Vector3(126.11476, 3.4095576, 153.27661)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4xowi"]
-albedo_color = Color(0.5800388, 0.59822124, 0.6342443, 1)
+albedo_color = Color(0.37546313, 0.61836404, 0.85710955, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_a202f"]
 
 [node name="platefrom" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.99527496, 0, 0.09709653, -0.07791136, 0.59677124, 0.79862005, -0.05794441, -0.8024115, 0.59395146, -2.059304, 2.6045594, 4.919779)
+transform = Transform3D(0.99527496, 0, 0.097096525, -0.07791136, 0.59677124, 0.79862005, -0.05794441, -0.8024115, 0.59395146, 10.30714, 12.896345, -1.6304188)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.86445475, 2.9425616, 2.1721392)
+transform = Transform3D(1, 0, 0, 0, 0.887727, -0.4603702, 0, 0.46037018, 0.887727, -0.47311902, 1.7306895, 2.1721392)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 physics_material_override = SubResource("PhysicsMaterial_4xowi")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18530273, 0, -0.13858032)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.963281, -1.3735331, -34.20539)
 shape = SubResource("BoxShape3D_a202f")
+debug_color = Color(1, 1, 1, 0.41960785)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
 material_override = SubResource("StandardMaterial3D_4xowi")
