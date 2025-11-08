@@ -1,6 +1,7 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1762628231
+::res://::1762630988
 icon.svg::CompressedTexture2D::161609123890941530::1762621973::1762622073::1::::<><><>0<>0<>f0c25dfff5c47d4de4c5745fb1715d83<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
-node_3d.tscn::PackedScene::8303843056569990361::1762628206::0::1::::<><><>0<>0<><>::
+node_3d.tscn::PackedScene::8303843056569990361::1762630315::0::1::::<><><>0<>0<><>::
+pivot.tscn::PackedScene::1545014830666613632::1762630320::0::1::::<><><>0<>0<><>::
 ::res://art/::1762627242
 cube_guy.blend::PackedScene::12214884040481841::1762623396::1762624404::1::::<><><>0<>0<>421f9b9370427e5f80c06e49a174c2b2<>res://.godot/imported/cube_guy.blend-ce2c9f3584a2eb690b3ee2d10294bb17.scn::
