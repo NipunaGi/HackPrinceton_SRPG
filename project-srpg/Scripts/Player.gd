@@ -22,6 +22,7 @@ extends CharacterBody3D
 @export var range_color = Color(0.2, 0.6, 1.0, 0.3) # Blue semi-transparent
 @export var range_outline_color = Color(0.3, 0.7, 1.0, 0.6) # Brighter blue for outline
 @export var range_outline_width = 0.1
+@export var show_range_only_on_hover = true # Only show range when hovering to move
 
 # Nodes
 @onready var ray_cast: RayCast3D = $RayCast3D
@@ -35,6 +36,7 @@ var line_mesh_instance: MeshInstance3D
 var range_indicator: MeshInstance3D
 var current_target_pos: Vector3 = Vector3.ZERO
 var is_valid_target: bool = false
+var is_hovering_for_move: bool = false
 
 # State
 var is_moving = false
@@ -74,8 +76,12 @@ func _physics_process(delta: float) -> void:
 	# Update line visualization in TP mode
 	if get_viewport().get_camera_3d() == tp_cam:
 		update_movement_line()
+		# Show range only if hovering for movement or if show_range_only_on_hover is false
 		if show_range_indicator and range_indicator:
-			range_indicator.visible = true
+			if show_range_only_on_hover:
+				range_indicator.visible = is_hovering_for_move
+			else:
+				range_indicator.visible = true
 	else:
 		if range_indicator:
 			range_indicator.visible = false
@@ -119,44 +125,42 @@ func create_range_indicator() -> void:
 			# Calculate the target grid position
 			var tile_world_x = global_position.x + tile_x
 			var tile_world_z = global_position.z + tile_z
+			var tile_pos = Vector3(tile_world_x, global_position.y, tile_world_z)
 			
-			# Raycast downward to check if tile exists
-			var ray_origin = Vector3(tile_world_x, global_position.y + 5, tile_world_z)
-			var ray_end = Vector3(tile_world_x, global_position.y - 5, tile_world_z)
-			
-			var ray_params = PhysicsRayQueryParameters3D.new()
-			ray_params.from = ray_origin
-			ray_params.to = ray_end
-			ray_params.exclude = [self]
-			
-			var result = space_state.intersect_ray(ray_params)
-			
-			# Only create tile indicator if ground exists
-			if result:
-				# Create a slightly raised square for each tile
-				var half_tile = grid_size * 0.48 # Slightly smaller to show gaps
-				var height = result.position.y + 0.05 # Place just above the detected ground
+			# Only create tile indicator if it's walkable (has ground and no obstacle)
+			if is_tile_walkable(tile_pos, space_state):
+				# Get the actual ground height for proper placement
+				var ground_ray_params = PhysicsRayQueryParameters3D.new()
+				ground_ray_params.from = tile_pos + Vector3(0, 5, 0)
+				ground_ray_params.to = tile_pos + Vector3(0, -5, 0)
+				ground_ray_params.exclude = [self]
+				var ground_result = space_state.intersect_ray(ground_ray_params)
 				
-				var base_index = vertices.size()
-				
-				# Bottom vertices (in global space)
-				vertices.append(Vector3(tile_world_x - half_tile, height, tile_world_z - half_tile))
-				vertices.append(Vector3(tile_world_x + half_tile, height, tile_world_z - half_tile))
-				vertices.append(Vector3(tile_world_x + half_tile, height, tile_world_z + half_tile))
-				vertices.append(Vector3(tile_world_x - half_tile, height, tile_world_z + half_tile))
-				
-				# Normals pointing up
-				for i in range(4):
-					normals.append(Vector3.UP)
-				
-				# Create two triangles for the tile
-				indices.append(base_index + 0)
-				indices.append(base_index + 1)
-				indices.append(base_index + 2)
-				
-				indices.append(base_index + 0)
-				indices.append(base_index + 2)
-				indices.append(base_index + 3)
+				if ground_result:
+					# Create a slightly raised square for each tile
+					var half_tile = grid_size * 0.48 # Slightly smaller to show gaps
+					var height = ground_result.position.y + 0.05 # Place just above the detected ground
+					
+					var base_index = vertices.size()
+					
+					# Bottom vertices (in global space)
+					vertices.append(Vector3(tile_world_x - half_tile, height, tile_world_z - half_tile))
+					vertices.append(Vector3(tile_world_x + half_tile, height, tile_world_z - half_tile))
+					vertices.append(Vector3(tile_world_x + half_tile, height, tile_world_z + half_tile))
+					vertices.append(Vector3(tile_world_x - half_tile, height, tile_world_z + half_tile))
+					
+					# Normals pointing up
+					for i in range(4):
+						normals.append(Vector3.UP)
+					
+					# Create two triangles for the tile
+					indices.append(base_index + 0)
+					indices.append(base_index + 1)
+					indices.append(base_index + 2)
+					
+					indices.append(base_index + 0)
+					indices.append(base_index + 2)
+					indices.append(base_index + 3)
 	
 	# Only create mesh if we have vertices
 	if vertices.size() > 0:
@@ -205,29 +209,50 @@ func update_movement_line() -> void:
 		if abs(target_grid_x - player_grid_x) <= move_range and abs(target_grid_z - player_grid_z) <= move_range:
 			var target_global = Vector3(target_grid_x * grid_size, global_position.y, target_grid_z * grid_size)
 			
-			# Verify the target position has ground beneath it
-			var verify_ray_params = PhysicsRayQueryParameters3D.new()
-			verify_ray_params.from = target_global + Vector3(0, 5, 0)
-			verify_ray_params.to = target_global + Vector3(0, -5, 0)
-			verify_ray_params.exclude = [self]
-			
-			var verify_result = space_state.intersect_ray(verify_ray_params)
-			
-			if verify_result:
-				# Ground exists at target location
+			# Verify the target position is valid (has ground and no obstacle)
+			if is_tile_walkable(target_global, space_state):
+				# Valid tile - show range and line
+				is_hovering_for_move = true
 				current_target_pos = target_global
 				is_valid_target = true
 				draw_line_to_target()
 			else:
-				# No ground at target location
+				# Invalid tile (obstacle or no ground)
+				is_hovering_for_move = false
 				is_valid_target = false
 				line_mesh_instance.visible = false
 		else:
+			is_hovering_for_move = false
 			is_valid_target = false
 			line_mesh_instance.visible = false
 	else:
+		is_hovering_for_move = false
 		is_valid_target = false
 		line_mesh_instance.visible = false
+
+# Check if a tile position is walkable (has ground and no obstacle)
+func is_tile_walkable(target_pos: Vector3, space_state: PhysicsDirectSpaceState3D) -> bool:
+	# Check for ground beneath the tile
+	var ground_ray_params = PhysicsRayQueryParameters3D.new()
+	ground_ray_params.from = target_pos + Vector3(0, 5, 0)
+	ground_ray_params.to = target_pos + Vector3(0, -5, 0)
+	ground_ray_params.exclude = [self]
+	
+	var ground_result = space_state.intersect_ray(ground_ray_params)
+	if not ground_result:
+		return false # No ground
+	
+	# Check for obstacles at the tile position
+	var obstacle_ray_params = PhysicsRayQueryParameters3D.new()
+	obstacle_ray_params.from = target_pos + Vector3(0, 0.1, 0) # Start slightly above ground
+	obstacle_ray_params.to = target_pos + Vector3(0, 2.0, 0) # Check up to player height
+	obstacle_ray_params.exclude = [self]
+	
+	var obstacle_result = space_state.intersect_ray(obstacle_ray_params)
+	if obstacle_result:
+		return false # Obstacle blocking
+	
+	return true # Tile is walkable
 
 func draw_line_to_target() -> void:
 	if not is_valid_target:
@@ -353,16 +378,8 @@ func move_to_clicked_tile(mouse_pos: Vector2) -> void:
 		if abs(target_grid_x - player_grid_x) <= move_range and abs(target_grid_z - player_grid_z) <= move_range:
 			var target_global = Vector3(target_grid_x * grid_size, global_position.y, target_grid_z * grid_size)
 			
-			# Verify the target position has ground beneath it
-			var verify_ray_params = PhysicsRayQueryParameters3D.new()
-			verify_ray_params.from = target_global + Vector3(0, 5, 0)
-			verify_ray_params.to = target_global + Vector3(0, -5, 0)
-			verify_ray_params.exclude = [self]
-			
-			var verify_result = space_state.intersect_ray(verify_ray_params)
-			
-			if verify_result:
-				# Only move if ground exists
+			# Only move if tile is walkable (has ground and no obstacle)
+			if is_tile_walkable(target_global, space_state):
 				start_grid_move(target_global)
 
 func start_grid_move(target_position: Vector3) -> void:
