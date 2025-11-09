@@ -85,20 +85,6 @@ func _on_move_requested():
 	
 
 func _physics_process(delta: float) -> void:
-	#Fire Weapon
-	if not can_move:
-		return 
-	if not is_moving:
-		_fire()
-	
-	# Gravity
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-
-	move_and_slide()
-	handle_tilt(delta)
-	
-	# Update line visualization in TP mode
 	if get_viewport().get_camera_3d() == tp_cam:
 		if show_range_indicator:
 			update_movement_line()
@@ -120,6 +106,21 @@ func _physics_process(delta: float) -> void:
 			range_indicator.visible = false
 		if line_mesh_instance:
 			line_mesh_instance.visible = false
+	#Fire Weapon
+	if not is_moving:
+		_fire()
+	
+	# Gravity
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+	if not can_move:
+		return
+	move_and_slide()
+	handle_tilt(delta)
+	
+	# Update line visualization in TP mode
+
+	
 
 func _input(event):
 	# Mouse look (FP_CAM only rotates locally)
@@ -454,8 +455,8 @@ func move_to_clicked_tile(mouse_pos: Vector2) -> void:
 				start_grid_move(target_global)
 
 func start_grid_move(target_position: Vector3) -> void:
-	if is_moving:
-		return
+	#if is_moving:
+		#return
 
 	is_moving = true
 	line_mesh_instance.visible = false # Hide line during movement
@@ -535,9 +536,9 @@ func switch_camera() -> void:
 		fp_cam.make_current()
 		line_mesh_instance.visible = false # Hide line in FP mode
 		range_indicator.visible = false # Hide range in FP mode
-func on_turn_start() -> void:
-	can_move = true
-func on_turn_end() -> void:
-	can_move = false
+#func on_turn_start() -> void:
+	#can_move = true
+#func on_turn_end() -> void:
+	#can_move = false
 	# Disable input or finalize movement
-	TurnManager.end_turn()
+	#TurnManager.end_turn()
