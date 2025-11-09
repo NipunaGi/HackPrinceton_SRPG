@@ -46,9 +46,18 @@ var tilted_left = false
 var tilted_right = false
 var original_x = 0.0
 var can_move= false
+
+# --- NEW: State for FPS Mode ---
+var shots_fired = 0
+const MAX_SHOTS = 30 # Limit for switching back to TP camera
+# --- END NEW STATE ---
+
 func _ready() -> void:
 	
 	GlobalEvents.player_move_requested.connect(_on_move_requested)
+	# --- NEW: Connect Shoot Signal ---
+	GlobalEvents.player_shoot_requested.connect(_on_shoot_mode_requested)
+	# --- END NEW CONNECTION ---
 	
 	# Snap to grid
 	global_position.x = snapped(global_position.x, grid_size)
@@ -83,6 +92,18 @@ func _on_move_requested():
 	# 3. If your range creation is separate, call it here if needed:
 	create_range_indicator()
 	
+# --- NEW: Function to enter shoot mode ---
+func _on_shoot_mode_requested():
+	# If we are already in the FPS camera, there is nothing to do.
+	if get_viewport().get_camera_3d() == fp_cam:
+		return
+
+	# If we made it here, we must be in TP_CAM, so switch to FP_CAM.
+	switch_camera()
+
+	print("Entered FPS Shoot Mode. Click the screen to shoot.")
+# --- END NEW FUNCTION ---
+	
 
 func _physics_process(delta: float) -> void:
 	if get_viewport().get_camera_3d() == tp_cam:
@@ -106,9 +127,10 @@ func _physics_process(delta: float) -> void:
 			range_indicator.visible = false
 		if line_mesh_instance:
 			line_mesh_instance.visible = false
-	#Fire Weapon
-	if not is_moving:
-		_fire()
+			
+	# --- MODIFIED: Removed _fire() call ---
+	# The _fire() call was removed from here. 
+	# Shooting is now handled by _input() on mouse click.
 	
 	update_raycast_alignment()
 	
@@ -142,10 +164,15 @@ func _input(event):
 			# When tilted right, can only look right and forward (prevent looking left at body)
 			parent.rotation.y = min(parent.rotation.y, 0.0)
 	
-	# Point-and-click movement
+	# --- MODIFIED: Updated Click Logic ---
 	if _left_click(event):
+		# If in TP mode, click is for movement
 		if get_viewport().get_camera_3d() == tp_cam:
 			move_to_clicked_tile(event.position)
+		# NEW: If in FP mode, click is for shooting
+		elif get_viewport().get_camera_3d() == fp_cam:
+			_perform_shot()
+	# --- END MODIFICATION ---
 
 	# Camera switch
 	if Input.is_action_pressed("jump"):
@@ -161,26 +188,39 @@ func update_raycast_alignment():
 	ray_cast.target_position = forward_vector * 1000.0 
 	ray_cast.enabled = true
 
+# --- MODIFIED: Renamed _fire() to _perform_shot() and added logic ---
 # ------------------ Fire Weapon --------------------
-func _fire():
+func _perform_shot():
+	# Guard clause: Prevent firing if the player is currently moving
 	if is_moving:
 		return
-	if Input.is_action_pressed("fire"):
-		if not anim_player.is_playing():
-			anim_player.play("Assault_Fire")
 		
-		# --- DAMAGE LOGIC ----------------------
-		ray_cast.force_raycast_update()
-		if ray_cast.is_colliding():
-			var target = ray_cast.get_collider()
-			if target.is_in_group("Enemy"):
-				target.take_damage(1)
-		# ---------------------------------------
-		is_firing = true
-	else:
-		if is_firing:
-			anim_player.stop()
-			is_firing = false
+	# 1. Perform the shot
+	if not anim_player.is_playing():
+		anim_player.play("Assault_Fire")
+		
+	# --- DAMAGE LOGIC (from his version) ---
+	ray_cast.force_raycast_update()
+	if ray_cast.is_colliding():
+		var target = ray_cast.get_collider()
+		if target.is_in_group("Enemy"):
+			# Assuming the target has a "take_damage" function
+			target.take_damage(1) 
+	# ---------------------------------------
+	is_firing = true # Note: is_firing is not currently used to stop shooting
+	
+	# 2. Increment and Check the Counter
+	shots_fired += 1
+	
+	print("Shots Fired: ", shots_fired, " / ", MAX_SHOTS)
+	
+	if shots_fired >= MAX_SHOTS:
+		shots_fired = 0 # Reset the counter
+		
+		# Switch back to Third-Person View immediately
+		if get_viewport().get_camera_3d() == fp_cam:
+			switch_camera()
+# --- END MODIFICATION ---
 
 # ------------------ Left Click Action --------------
 func _left_click(event):

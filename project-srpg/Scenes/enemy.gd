@@ -18,6 +18,7 @@ func enemy_turn():
 	#pathfind towards player
 	#coinflip attack player
 	#end turn	
+	pass
 
 # ----- Enemy Damage -----------------
 func take_damage(amount: int):
