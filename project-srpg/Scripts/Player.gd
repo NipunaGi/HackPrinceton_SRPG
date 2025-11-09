@@ -596,6 +596,9 @@ func switch_camera() -> void:
 		# Release the mouse
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		
+		# NEW: Signal that we are exiting FPS mode (false = TP mode active)
+		GlobalEvents.player_camera_switched.emit(false) 
+		
 	else:
 		# Switching from TP to FP
 		fp_cam.make_current()
@@ -604,3 +607,6 @@ func switch_camera() -> void:
 		
 		# Capture the mouse (stick to the center)
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		
+		# NEW: Signal that we are entering FPS mode (true = FPS mode active)
+		GlobalEvents.player_camera_switched.emit(true)
