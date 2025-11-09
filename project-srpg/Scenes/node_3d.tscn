@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dqkpc1ym06crh"]
+[gd_scene load_steps=19 format=3 uid="uid://dqkpc1ym06crh"]
 
 [ext_resource type="Script" uid="uid://cgso6b777sf82" path="res://Scripts/Player.gd" id="1_a202f"]
 [ext_resource type="MeshLibrary" uid="uid://dlohrx1afpxsl" path="res://Blocks/blocks.tres" id="1_okq71"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dhw7bpk3dt66o" path="res://UI/crosshair.tscn" id="5_ifh66"]
 [ext_resource type="PackedScene" uid="uid://c1kpymc87y2b8" path="res://UI/permanent.tscn" id="5_t3l2h"]
 [ext_resource type="PackedScene" uid="uid://nma70vipug8x" path="res://UI/actions.tscn" id="6_aeo3b"]
+[ext_resource type="PackedScene" uid="uid://bgab0t7gkhvwa" path="res://UI/Ammo.tscn" id="8_rvjhm"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_a0tk4"]
 
@@ -134,6 +135,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 1)
 shape = SubResource("CapsuleShape3D_a8auw")
 
 [node name="crosshair" parent="." instance=ExtResource("5_ifh66")]
+
+[node name="Ammo" parent="." instance=ExtResource("8_rvjhm")]
 
 [node name="PlayerStatsUI" parent="." instance=ExtResource("5_t3l2h")]
 

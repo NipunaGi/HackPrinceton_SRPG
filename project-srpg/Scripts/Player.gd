@@ -62,6 +62,8 @@ func _ready() -> void:
 	# Ensure mouse is visible/unlocked when the game starts (assuming TP camera starts active)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
+	GlobalEvents.bullet_count_updated.emit(MAX_SHOTS)
+	
 	# Snap to grid
 	global_position.x = snapped(global_position.x, grid_size)
 	global_position.z = snapped(global_position.z, grid_size)
@@ -215,6 +217,7 @@ func _perform_shot():
 	# 2. Increment and Check the Counter
 	shots_fired += 1
 	
+	GlobalEvents.bullet_count_updated.emit(MAX_SHOTS - shots_fired)
 	print("Shots Fired: ", shots_fired, " / ", MAX_SHOTS)
 	
 	if shots_fired >= MAX_SHOTS:
@@ -597,7 +600,11 @@ func switch_camera() -> void:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		
 		# NEW: Signal that we are exiting FPS mode (false = TP mode active)
-		GlobalEvents.player_camera_switched.emit(false) 
+		GlobalEvents.player_camera_switched.emit(false)
+		
+		# NEW: Reset shots and update the UI label immediately (full clip)
+		shots_fired = 0
+		GlobalEvents.bullet_count_updated.emit(MAX_SHOTS)
 		
 	else:
 		# Switching from TP to FP
