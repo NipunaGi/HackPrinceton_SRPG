@@ -18,7 +18,7 @@ extends CharacterBody3D
 @export var path_segments = 20 # Number of segments in the curved path
 
 # ----- Range Display Settings -----
-@export var show_range_indicator = true
+@export var show_range_indicator = false
 @export var range_color = Color(0.2, 0.6, 1.0, 0.3) # Blue semi-transparent
 @export var range_outline_color = Color(0.3, 0.7, 1.0, 0.6) # Brighter blue for outline
 @export var range_outline_width = 0.1
@@ -47,6 +47,9 @@ var tilted_right = false
 var original_x = 0.0
 
 func _ready() -> void:
+	
+	GlobalEvents.player_move_requested.connect(_on_move_requested)
+	
 	# Snap to grid
 	global_position.x = snapped(global_position.x, grid_size)
 	global_position.z = snapped(global_position.z, grid_size)
@@ -66,6 +69,20 @@ func _ready() -> void:
 	await get_tree().process_frame
 	if show_range_indicator:
 		create_range_indicator()
+		
+func _on_move_requested():
+	print("Player received move request! Executing movement logic.")
+	
+	# 1. Update your flag (if other code relies on it)
+	show_range_indicator = true
+	
+	# 2. **Crucially, make the node itself visible**
+	if range_indicator:
+		range_indicator.visible = true 
+		
+	# 3. If your range creation is separate, call it here if needed:
+	create_range_indicator()
+	
 
 func _physics_process(delta: float) -> void:
 	#Fire Weapon
@@ -81,16 +98,26 @@ func _physics_process(delta: float) -> void:
 	
 	# Update line visualization in TP mode
 	if get_viewport().get_camera_3d() == tp_cam:
-		update_movement_line()
-		# Show range only if hovering for movement or if show_range_only_on_hover is false
-		if show_range_indicator and range_indicator:
-			if show_range_only_on_hover:
-				range_indicator.visible = is_hovering_for_move
+		if show_range_indicator:
+			update_movement_line()
+			# Show range only if hovering for movement or if show_range_only_on_hover is false
+			if range_indicator:
+				if show_range_only_on_hover:
+					range_indicator.visible = is_hovering_for_move
+				else:
+					range_indicator.visible = true
 			else:
-				range_indicator.visible = true
+				# If NOT in move mode, make sure visuals are hidden
+				if line_mesh_instance:
+					line_mesh_instance.visible = false
+				if range_indicator:
+					range_indicator.visible = false
 	else:
+		# If in FP_CAM, hide all movement visuals
 		if range_indicator:
 			range_indicator.visible = false
+		if line_mesh_instance:
+			line_mesh_instance.visible = false
 
 func _input(event):
 	# Mouse look (FP_CAM only rotates locally)
@@ -395,6 +422,10 @@ func quadratic_bezier(p0: Vector3, p1: Vector3, p2: Vector3, t: float) -> Vector
 # ------------------ Movement ------------------
 
 func move_to_clicked_tile(mouse_pos: Vector2) -> void:
+	
+	if not show_range_indicator:
+		return
+	
 	var from = tp_cam.project_ray_origin(mouse_pos)
 	var to = from + tp_cam.project_ray_normal(mouse_pos) * 1000
 	var space_state = get_world_3d().direct_space_state
@@ -439,6 +470,10 @@ func start_grid_move(target_position: Vector3) -> void:
 
 	global_position = target_position
 	is_moving = false
+	
+	show_range_indicator = false
+	if range_indicator:
+		range_indicator.visible = false
 
 # ------------------ Tilt / Peek ------------------
 
