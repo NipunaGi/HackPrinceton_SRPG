@@ -1,15 +1,51 @@
-[gd_scene load_steps=11 format=3 uid="uid://dqkpc1ym06crh"]
+[gd_scene load_steps=14 format=3 uid="uid://dqkpc1ym06crh"]
 
 [ext_resource type="Script" uid="uid://cgso6b777sf82" path="res://Scripts/Player.gd" id="1_a202f"]
 [ext_resource type="MeshLibrary" uid="uid://dlohrx1afpxsl" path="res://Blocks/blocks.tres" id="1_okq71"]
 [ext_resource type="Script" uid="uid://6x73jqbnk6om" path="res://Scripts/CameraSpringArm.gd" id="2_noarx"]
-[ext_resource type="Script" path="res://Scenes/enemy.gd" id="4_wosnj"]
+[ext_resource type="PackedScene" uid="uid://bv83clv528qmb" path="res://Assets/GoldenBlaster.glb" id="3_a8auw"]
+[ext_resource type="Script" uid="uid://c1xv02ncl6uff" path="res://Scenes/enemy.gd" id="4_wosnj"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_a0tk4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_r3fl7"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_jka67"]
+[sub_resource type="Animation" id="Animation_t3l2h"]
+resource_name = "Assault_Fire"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FP_CAM/Weapon/GoldenBlaster:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.48305255, 0.9332384, -0.6185019), Vector3(0.483, 0.933, -0.5), Vector3(0.483, 0.933, -0.619)]
+}
+
+[sub_resource type="Animation" id="Animation_a8auw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FP_CAM/Weapon/GoldenBlaster:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.48305255, 0.9332384, -0.6185019)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ifh66"]
+_data = {
+&"Assault_Fire": SubResource("Animation_t3l2h"),
+&"RESET": SubResource("Animation_a8auw")
+}
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wosnj"]
 vertex_color_is_srgb = true
@@ -49,17 +85,22 @@ shape = SubResource("CapsuleShape3D_r3fl7")
 
 [node name="RayCast3D" type="RayCast3D" parent="Player"]
 
-[node name="Weapon" type="Node3D" parent="Player"]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/Weapon"]
-transform = Transform3D(0.4, 0, 0, 0, 0.2, 0, 0, 0, 1, 0.30747503, 0.83155465, -0.6261928)
-mesh = SubResource("BoxMesh_jka67")
-
 [node name="Firstperson" type="Node3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4209299, 0.96580076, 0)
 
 [node name="FP_CAM" type="Camera3D" parent="Player/Firstperson"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23883772, 0.31898093, 0)
+
+[node name="Weapon" type="Node3D" parent="Player/Firstperson/FP_CAM"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18209219, -1.2847817, 0)
+
+[node name="GoldenBlaster" parent="Player/Firstperson/FP_CAM/Weapon" instance=ExtResource("3_a8auw")]
+transform = Transform3D(-0.025520256, 0, 0.1983651, 0, 0.2, 0, -0.1983651, 0, -0.025520256, 0.48305255, 0.9332384, -0.6185019)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Firstperson"]
+libraries = {
+&"": SubResource("AnimationLibrary_ifh66")
+}
 
 [node name="CameraSpringArm" type="SpringArm3D" parent="." node_paths=PackedStringArray("player")]
 transform = Transform3D(0.8660254, 0.35355338, 0.35355338, 0, 0.70710677, -0.70710677, -0.5, 0.6123724, 0.6123724, 0, 7.5216584, 0)
