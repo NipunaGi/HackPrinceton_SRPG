@@ -29,19 +29,19 @@ func _physics_process(delta: float) -> void:
 		# define movement
 		var move_vector = Vector3.ZERO
 		if Input.is_action_pressed("back"):
-			move_vector.z = -1
-		elif Input.is_action_pressed("forward"):
 			move_vector.z = 1
+		elif Input.is_action_pressed("forward"):
+			move_vector.z = -1
 		elif Input.is_action_pressed("right"):
-			move_vector.x = -1
-		elif Input.is_action_pressed("left"):
 			move_vector.x = 1
+		elif Input.is_action_pressed("left"):
+			move_vector.x = -1
 			
 		# camera-relative direction
 		if not move_vector.is_zero_approx():
 			move_vector = move_vector.rotated(Vector3.UP, rotation.y)
 			# makes the input relative to the character's rotation
-			var grid_direction = (transform.basis * move_vector).normalized().round()
+			var grid_direction = ($Firstperson.transform.basis * move_vector).normalized().round()
 			
 			if not grid_direction.is_zero_approx():
 				# Start the movement
@@ -87,3 +87,11 @@ func _input(event):
 		
 			$Firstperson.rotation.x -= event.relative.y / sensitivity
 			$Firstperson.rotation.x = clamp($Firstperson.rotation.x, deg_to_rad(-45),deg_to_rad(90))
+func switch_camera()->void:
+	if get_viewport().getcamera() == $CameraSpringArm.TP_CAM:
+		$Firstperson.FP_CAM.current = true
+	else:
+		$CameraSpringArm.TP_CAM.current = true
+func acutal_switch(event):
+	if Input.is_action_pressed("space"):
+		switch_camera()
