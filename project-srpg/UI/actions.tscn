@@ -1,0 +1,73 @@
+[gd_scene load_steps=11 format=3 uid="uid://nma70vipug8x"]
+
+[ext_resource type="Texture2D" uid="uid://lbmms6qxulhc" path="res://UI/button_shoot_regular.png" id="1_bwew4"]
+[ext_resource type="Texture2D" uid="uid://bxprwscepoq5u" path="res://UI/button_shoot_hover.png" id="2_75s8g"]
+[ext_resource type="Texture2D" uid="uid://drtio560ngxss" path="res://UI/button_shoot_disabled.png" id="3_i1fy5"]
+[ext_resource type="Texture2D" uid="uid://07xs428cxwn" path="res://UI/button_move_regular.png" id="4_e266m"]
+[ext_resource type="Texture2D" uid="uid://cs4xene3hiu44" path="res://UI/button_move_hover.png" id="5_3vqmg"]
+[ext_resource type="Texture2D" uid="uid://bmv73hlxkiy6v" path="res://UI/button_guard_regular.png" id="6_6pegj"]
+[ext_resource type="Texture2D" uid="uid://7p1amjtvrto7" path="res://UI/button_move_disabled.png" id="6_75s8g"]
+[ext_resource type="Texture2D" uid="uid://yrgv37sr2all" path="res://UI/button_guard_hover.png" id="7_fak1e"]
+[ext_resource type="Script" uid="uid://c2pvu23rgw0lc" path="res://UI/move.gd" id="7_i1fy5"]
+[ext_resource type="Texture2D" uid="uid://blbuqbhcpkd6f" path="res://UI/button_guard_disabled.png" id="8_bh0vt"]
+
+[node name="actions" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 4.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -262.25
+offset_top = -99.0
+offset_right = 262.25
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Shoot" type="TextureButton" parent="Panel"]
+layout_mode = 0
+offset_left = 34.75
+offset_top = 18.0
+offset_right = 159.75
+offset_bottom = 68.0
+texture_normal = ExtResource("1_bwew4")
+texture_hover = ExtResource("2_75s8g")
+texture_disabled = ExtResource("3_i1fy5")
+
+[node name="Move" type="TextureButton" parent="Panel"]
+layout_mode = 0
+offset_left = 199.75
+offset_top = 18.0
+offset_right = 324.75
+offset_bottom = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("4_e266m")
+texture_hover = ExtResource("5_3vqmg")
+texture_disabled = ExtResource("6_75s8g")
+script = ExtResource("7_i1fy5")
+
+[node name="TextureButton" type="TextureButton" parent="Panel"]
+layout_mode = 0
+offset_left = 364.75
+offset_top = 18.0
+offset_right = 489.75
+offset_bottom = 68.0
+texture_normal = ExtResource("6_6pegj")
+texture_hover = ExtResource("7_fak1e")
+texture_disabled = ExtResource("8_bh0vt")
