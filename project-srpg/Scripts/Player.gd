@@ -59,6 +59,9 @@ func _ready() -> void:
 	GlobalEvents.player_shoot_requested.connect(_on_shoot_mode_requested)
 	# --- END NEW CONNECTION ---
 	
+	# Ensure mouse is visible/unlocked when the game starts (assuming TP camera starts active)
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
 	# Snap to grid
 	global_position.x = snapped(global_position.x, grid_size)
 	global_position.z = snapped(global_position.z, grid_size)
@@ -587,14 +590,17 @@ func handle_tilt(delta: float) -> void:
 
 func switch_camera() -> void:
 	if get_viewport().get_camera_3d() == fp_cam:
+		# Switching from FP to TP
 		tp_cam.make_current()
+		
+		# Release the mouse
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		
 	else:
+		# Switching from TP to FP
 		fp_cam.make_current()
 		line_mesh_instance.visible = false # Hide line in FP mode
 		range_indicator.visible = false # Hide range in FP mode
-#func on_turn_start() -> void:
-	#can_move = true
-#func on_turn_end() -> void:
-	#can_move = false
-	# Disable input or finalize movement
-	#TurnManager.end_turn()
+		
+		# Capture the mouse (stick to the center)
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
