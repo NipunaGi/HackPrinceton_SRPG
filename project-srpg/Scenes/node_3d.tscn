@@ -1,7 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://dqkpc1ym06crh"]
+[gd_scene load_steps=18 format=3 uid="uid://dqkpc1ym06crh"]
 
 [ext_resource type="Script" uid="uid://cgso6b777sf82" path="res://Scripts/Player.gd" id="1_a202f"]
 [ext_resource type="MeshLibrary" uid="uid://dlohrx1afpxsl" path="res://Blocks/blocks.tres" id="1_okq71"]
+[ext_resource type="Script" uid="uid://bed32as4bftwu" path="res://Scenes/node_3d.gd" id="1_worak"]
 [ext_resource type="Script" uid="uid://6x73jqbnk6om" path="res://Scripts/MouseLook.gd" id="2_noarx"]
 [ext_resource type="PackedScene" uid="uid://bv83clv528qmb" path="res://Assets/GoldenBlaster.glb" id="3_a8auw"]
 [ext_resource type="Script" uid="uid://c1xv02ncl6uff" path="res://Scenes/enemy.gd" id="4_wosnj"]
@@ -60,6 +61,7 @@ material = SubResource("StandardMaterial3D_wosnj")
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a8auw"]
 
 [node name="Node3D" type="Node3D"]
+script = ExtResource("1_worak")
 
 [node name="Map" type="Node3D" parent="."]
 
@@ -93,6 +95,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4209299, 0.96580076, 0)
 
 [node name="FP_CAM" type="Camera3D" parent="Player/Firstperson"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23883772, 0.31898093, 0)
+current = true
 
 [node name="Weapon" type="Node3D" parent="Player/Firstperson/FP_CAM"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18209219, -1.2847817, 0)

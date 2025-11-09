@@ -45,7 +45,7 @@ var is_firing = false
 var tilted_left = false
 var tilted_right = false
 var original_x = 0.0
-
+var can_move= false
 func _ready() -> void:
 	
 	GlobalEvents.player_move_requested.connect(_on_move_requested)
@@ -86,6 +86,8 @@ func _on_move_requested():
 
 func _physics_process(delta: float) -> void:
 	#Fire Weapon
+	if not can_move:
+		return 
 	if not is_moving:
 		_fire()
 	
@@ -533,3 +535,9 @@ func switch_camera() -> void:
 		fp_cam.make_current()
 		line_mesh_instance.visible = false # Hide line in FP mode
 		range_indicator.visible = false # Hide range in FP mode
+func on_turn_start() -> void:
+	can_move = true
+func on_turn_end() -> void:
+	can_move = false
+	# Disable input or finalize movement
+	TurnManager.end_turn()

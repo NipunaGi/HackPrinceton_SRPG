@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+TurnManager="*res://Scripts/TurnManager.gd"
 GlobalEvents="*res://Scripts/GlobalEvents.gd"
 
 [display]
