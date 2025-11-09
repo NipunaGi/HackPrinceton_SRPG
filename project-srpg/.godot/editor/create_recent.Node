@@ -1,8 +1,13 @@
+<<<<<<< Updated upstream
 Camera3D
 Node3D
 GridMap
 MeshInstance3D
+=======
+>>>>>>> Stashed changes
 CollisionShape3D
+MeshInstance3D
 CharacterBody3D
+GridMap
 StaticBody3D
 DirectionalLight3D
