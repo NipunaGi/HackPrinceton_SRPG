@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dqkpc1ym06crh"]
+[gd_scene load_steps=17 format=3 uid="uid://dqkpc1ym06crh"]
 
 [ext_resource type="Script" uid="uid://cgso6b777sf82" path="res://Scripts/Player.gd" id="1_a202f"]
 [ext_resource type="MeshLibrary" uid="uid://dlohrx1afpxsl" path="res://Blocks/blocks.tres" id="1_okq71"]
@@ -105,7 +105,7 @@ libraries = {
 &"": SubResource("AnimationLibrary_ifh66")
 }
 
-[node name="CameraSpringArm" type="SpringArm3D" parent="." node_paths=PackedStringArray("player")]
+[node name="CameraSpringArm" type="SpringArm3D" parent="."]
 transform = Transform3D(0.8660254, 0.35355338, 0.35355338, 0, 0.70710677, -0.70710677, -0.5, 0.6123724, 0.6123724, 0, 7.5216584, 0)
 spring_length = -15.0
 script = ExtResource("2_noarx")
