@@ -4,12 +4,16 @@ extends CharacterBody3D
 @export var grid_size = 4.0
 @export var move_duration = 0.2 # How long it takes to move one grid cell
 @export var sensitivity = 100
+@export	var camera_tilt = 10
+@export var peek_offset = 3
 # checking wall collisions
 @onready var ray_cast: RayCast3D = $RayCast3D
 
 # state var to prevent new movement while already moving
 var is_moving = false
-
+var tilted_left = false
+var tilted_right = false
+var original_x = 0.0
 func _ready() -> void:
 	# snap to grid
 	global_position.x = snapped(global_position.x, grid_size)
@@ -48,7 +52,40 @@ func _physics_process(delta: float) -> void:
 				start_grid_move(grid_direction)
 
 	move_and_slide()
+	var cam = $Firstperson/FP_CAM
+	var parent = $Firstperson
+# Tilt Left
+	if Input.is_action_just_pressed("tiltLeft") and not tilted_left:
+			var tween = create_tween()
+			tween.tween_property(cam, "rotation:z", deg_to_rad(camera_tilt), 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			tween.tween_property(parent, "position:x", original_x - peek_offset, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			tilted_left = true
+			tilted_right = false
 
+# Tilt Right
+	if Input.is_action_just_pressed("tiltRight") and not tilted_right:
+		var tween = create_tween()
+		tween.tween_property(cam, "rotation:z", deg_to_rad(-camera_tilt), 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(parent, "position:x", original_x + peek_offset, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tilted_right = true
+		tilted_left = false
+
+# Reset Left
+	if Input.is_action_just_released("tiltLeft") and tilted_left:
+		var tween = create_tween()
+		tween.tween_property(cam, "rotation:z", 0.0, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(parent, "position:x", original_x, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tilted_left = false
+
+# Reset Right
+	if Input.is_action_just_released("tiltRight") and tilted_right:
+		var tween = create_tween()
+		tween.tween_property(cam, "rotation:z", 0.0, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(parent, "position:x", original_x, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tilted_right = false
+
+# Clamp Z rotation (optional safety)
+	cam.rotation.z = clamp(cam.rotation.z, deg_to_rad(-camera_tilt), deg_to_rad(camera_tilt))
 # grid movement
 func start_grid_move(grid_direction: Vector3) -> void:
 	is_moving = true
@@ -74,15 +111,15 @@ func start_grid_move(grid_direction: Vector3) -> void:
 		# tween to finish before we can move again
 		await tween.finished
 		
-		# snap position
+	# snap position
 		global_position = target_position
 		is_moving = false
 	else:
 		# hit a wall, we can move again immediately
 		is_moving = false
+	
 
 func _input(event):
-	print('O')
 	if Input.is_action_pressed("jump"):
 		switch_camera()
 	if event is InputEventMouseMotion:
