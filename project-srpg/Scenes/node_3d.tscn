@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://dqkpc1ym06crh"]
+[gd_scene load_steps=12 format=3 uid="uid://dqkpc1ym06crh"]
 
 [ext_resource type="Script" uid="uid://cgso6b777sf82" path="res://Scripts/Player.gd" id="1_a202f"]
 [ext_resource type="MeshLibrary" uid="uid://dlohrx1afpxsl" path="res://Blocks/blocks.tres" id="1_okq71"]
 [ext_resource type="Script" uid="uid://6x73jqbnk6om" path="res://Scripts/CameraSpringArm.gd" id="2_noarx"]
 [ext_resource type="Script" uid="uid://c1xv02ncl6uff" path="res://Scenes/enemy.gd" id="4_wosnj"]
+[ext_resource type="PackedScene" uid="uid://c1kpymc87y2b8" path="res://UI/main.tscn" id="5_t3l2h"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_a0tk4"]
 
@@ -85,3 +86,5 @@ mesh = SubResource("CapsuleMesh_t3l2h")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 1)
 shape = SubResource("CapsuleShape3D_a8auw")
+
+[node name="Control" parent="." instance=ExtResource("5_t3l2h")]

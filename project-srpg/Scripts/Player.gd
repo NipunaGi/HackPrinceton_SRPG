@@ -92,6 +92,7 @@ func _input(event):
 			$Firstperson.rotation.x = clamp($Firstperson.rotation.x, deg_to_rad(-45),deg_to_rad(90))
 			
 func switch_camera()->void:
+	
 	if get_viewport().get_camera_3d() == $Firstperson/FP_CAM:
 		$"../CameraSpringArm/TP_CAM".make_current()
 	else:
