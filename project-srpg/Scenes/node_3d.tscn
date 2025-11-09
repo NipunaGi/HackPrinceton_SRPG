@@ -124,6 +124,7 @@ transform = Transform3D(-5.9604645e-08, -0.86602545, 0.49999994, -1.4901161e-08,
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.43389, 0, 19.226671)
 up_direction = Vector3(0.09900619, 0.009950371, 0.9950371)
 script = ExtResource("4_wosnj")
+health = null
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Enemy"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 1)
