@@ -52,19 +52,28 @@ texture_normal = ExtResource("2_vudi7")
 texture_hover = ExtResource("3_1vwyg")
 texture_disabled = ExtResource("4_ahc04")
 
-[node name="Move" type="TextureButton" parent="Panel"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 199.75
-offset_top = 18.0
-offset_right = 324.75
-offset_bottom = 68.0
-grow_horizontal = 2
-grow_vertical = 2
-texture_normal = ExtResource("5_8cye3")
-texture_hover = ExtResource("6_062e5")
-texture_disabled = ExtResource("7_m2rse")
-script = ExtResource("8_rl1jb")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Firstperson"]
+libraries = {
+&"": SubResource("AnimationLibrary_ifh66")
+}
+
+[node name="CameraSpringArm" type="SpringArm3D" parent="."]
+transform = Transform3D(0.8660254, 0.35355338, 0.35355338, 0, 0.70710677, -0.70710677, -0.5, 0.6123724, 0.6123724, 0, 7.5216584, 0)
+spring_length = -15.0
+script = ExtResource("2_noarx")
+
+[node name="TP_CAM" type="Camera3D" parent="CameraSpringArm"]
+transform = Transform3D(-1, 5.9604645e-08, -1.1920929e-07, 2.9802322e-08, 1.0000001, 0, 8.940697e-08, 0, -1.0000001, 0.3696588, -0.619267, 0.9210925)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-5.9604645e-08, -0.86602545, 0.49999994, -1.4901161e-08, 0.49999994, 0.86602545, -1, 5.9604645e-08, -1.4901161e-08, 10, 7, 2)
+
+[node name="Enemy" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.43389, 0, 19.226671)
+up_direction = Vector3(0.09900619, 0.009950371, 0.9950371)
+script = ExtResource("4_wosnj")
+health = null
 
 [node name="TextureButton" type="TextureButton" parent="Panel"]
 layout_mode = 0
