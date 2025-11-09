@@ -4,7 +4,7 @@ extends CharacterBody3D
 @export var grid_size = 4.0
 @export var move_duration = 0.2 # How long it takes to move one grid cell
 @export var sensitivity = 100
-@export	var camera_tilt = 10
+@export	var camera_tilt = 1
 @export var peek_offset = 3
 # checking wall collisions
 @onready var ray_cast: RayCast3D = $RayCast3D
@@ -59,6 +59,7 @@ func _physics_process(delta: float) -> void:
 			var tween = create_tween()
 			tween.tween_property(cam, "rotation:z", deg_to_rad(camera_tilt), 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 			tween.tween_property(parent, "position:x", original_x - peek_offset, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			tween.tween_property($MeshInstance3D, "rotation:z", deg_to_rad(15), 0.2)
 			tilted_left = true
 			tilted_right = false
 
@@ -67,6 +68,7 @@ func _physics_process(delta: float) -> void:
 		var tween = create_tween()
 		tween.tween_property(cam, "rotation:z", deg_to_rad(-camera_tilt), 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		tween.tween_property(parent, "position:x", original_x + peek_offset, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property($MeshInstance3D, "rotation:z", deg_to_rad(-15), 0.2)
 		tilted_right = true
 		tilted_left = false
 
@@ -75,6 +77,7 @@ func _physics_process(delta: float) -> void:
 		var tween = create_tween()
 		tween.tween_property(cam, "rotation:z", 0.0, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		tween.tween_property(parent, "position:x", original_x, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property($MeshInstance3D, "rotation:z", 0.0, 0.2)
 		tilted_left = false
 
 # Reset Right
@@ -82,6 +85,7 @@ func _physics_process(delta: float) -> void:
 		var tween = create_tween()
 		tween.tween_property(cam, "rotation:z", 0.0, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		tween.tween_property(parent, "position:x", original_x, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property($MeshInstance3D, "rotation:z", 0.0, 0.2)
 		tilted_right = false
 
 # Clamp Z rotation (optional safety)
@@ -117,7 +121,6 @@ func start_grid_move(grid_direction: Vector3) -> void:
 	else:
 		# hit a wall, we can move again immediately
 		is_moving = false
-	
 
 func _input(event):
 	if Input.is_action_pressed("jump"):
