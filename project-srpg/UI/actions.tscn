@@ -42,6 +42,7 @@ grow_vertical = 0
 mouse_filter = 2
 
 [node name="Shoot" type="TextureButton" parent="Panel"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 34.75
 offset_top = 18.0

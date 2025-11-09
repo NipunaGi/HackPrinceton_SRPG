@@ -46,9 +46,14 @@ var tilted_left = false
 var tilted_right = false
 var original_x = 0.0
 var can_move= false
+# For FPS
+var shots_fired = 0
+const MAX_SHOTS = 30 # Limit for switching back to TP camera
+
 func _ready() -> void:
 	
 	GlobalEvents.player_move_requested.connect(_on_move_requested)
+	GlobalEvents.player_shoot_requested.connect(_on_shoot_requested)
 	
 	# Snap to grid
 	global_position.x = snapped(global_position.x, grid_size)
@@ -82,7 +87,16 @@ func _on_move_requested():
 		
 	# 3. If your range creation is separate, call it here if needed:
 	create_range_indicator()
-	
+
+# ------------------ Shoot Request Action --------------------
+func _on_shoot_requested():
+	# 1. Switch to First-Person View immediately
+	if get_viewport().get_camera_3d() == fp_cam:
+		return
+
+	switch_camera()
+
+	print("Entered FPS Shoot Mode. Click the screen to shoot.")
 
 func _physics_process(delta: float) -> void:
 	if get_viewport().get_camera_3d() == tp_cam:
@@ -106,9 +120,6 @@ func _physics_process(delta: float) -> void:
 			range_indicator.visible = false
 		if line_mesh_instance:
 			line_mesh_instance.visible = false
-	#Fire Weapon
-	if not is_moving:
-		_fire()
 	
 	# Gravity
 	if not is_on_floor():
@@ -144,27 +155,45 @@ func _input(event):
 	if _left_click(event):
 		if get_viewport().get_camera_3d() == tp_cam:
 			move_to_clicked_tile(event.position)
+		
+		# ---  Click-to-Shoot in FP_CAM ---
+		elif get_viewport().get_camera_3d() == fp_cam:
+			# Call the function that performs the shot
+			_perform_shot()
 
 	# Camera switch
 	if Input.is_action_pressed("jump"):
 		switch_camera()
 
-# ------------------ Fire Weapon --------------------
-func _fire():
+# ------------------ Weapon Handling --------------------
+func _perform_shot():
+	# Guard clause: Prevent firing if the player is currently moving
 	if is_moving:
 		return
-	if Input.is_action_pressed("fire"):
-		#if not anim_player.is_playing():
-			#if ray_cast.is_colliding():
-				#var target = ray_cast.get_collider()
-				#if target.is_in_group("Enemy"):
-					#target.health -= 10
-		anim_player.play("Assault_Fire")
-		is_firing = true
-	else:
-		if is_firing:
-			anim_player.stop()
-			is_firing = false
+		
+	# 1. Perform the shot
+	anim_player.play("Assault_Fire")
+	is_firing = true
+	
+	# Reset is_firing after a short delay so the player can fire again
+	# We can use a short timer here if the animation doesn't handle resetting it.
+	# Example (optional, depending on your animation):
+	# await get_tree().create_timer(0.2).timeout
+	# is_firing = false
+
+	# 2. Increment and Check the Counter
+	shots_fired += 1
+	
+	print("Shots Fired: ", shots_fired, " / ", MAX_SHOTS)
+	
+	if shots_fired >= MAX_SHOTS:
+		shots_fired = 0 # Reset the counter
+		
+		# Switch back to Third-Person View immediately
+		if get_viewport().get_camera_3d() == fp_cam:
+			switch_camera()
+	
+	# Add your raycast/damage logic here if it's not handled by the animation end.
 
 # ------------------ Left Click Action --------------
 func _left_click(event):
@@ -542,3 +571,4 @@ func switch_camera() -> void:
 	#can_move = false
 	# Disable input or finalize movement
 	#TurnManager.end_turn()
+	
