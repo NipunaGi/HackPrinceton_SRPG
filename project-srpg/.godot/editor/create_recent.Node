@@ -1,7 +1,8 @@
+Camera3D
+Node3D
 GridMap
 MeshInstance3D
 CollisionShape3D
 CharacterBody3D
 StaticBody3D
-Camera3D
 DirectionalLight3D

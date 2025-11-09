@@ -45,6 +45,12 @@ shape = SubResource("CapsuleShape3D_r3fl7")
 transform = Transform3D(0.4, 0, 0, 0, 0.2, 0, 0, 0, 1, 0.30747503, 0.83155465, -0.6261928)
 mesh = SubResource("BoxMesh_jka67")
 
+[node name="Firstperson" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4209299, 0.96580076, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Player/Firstperson"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23883772, 0.31898093, 0)
+
 [node name="CameraSpringArm" type="SpringArm3D" parent="." node_paths=PackedStringArray("player")]
 transform = Transform3D(0.8660254, 0.35355338, 0.35355338, 0, 0.70710677, -0.70710677, -0.5, 0.6123724, 0.6123724, 0, 7.5216584, 0)
 spring_length = -15.0

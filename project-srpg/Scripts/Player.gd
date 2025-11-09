@@ -3,7 +3,7 @@ extends CharacterBody3D
 # to change grid movement
 @export var grid_size = 4.0
 @export var move_duration = 0.2 # How long it takes to move one grid cell
-
+@export var sensitivity = 100
 # checking wall collisions
 @onready var ray_cast: RayCast3D = $RayCast3D
 
@@ -39,6 +39,7 @@ func _physics_process(delta: float) -> void:
 			
 		# camera-relative direction
 		if not move_vector.is_zero_approx():
+			move_vector = move_vector.rotated(Vector3.UP, rotation.y)
 			# makes the input relative to the character's rotation
 			var grid_direction = (transform.basis * move_vector).normalized().round()
 			
@@ -79,3 +80,10 @@ func start_grid_move(grid_direction: Vector3) -> void:
 	else:
 		# hit a wall, we can move again immediately
 		is_moving = false
+
+func _input(event):
+	if event is InputEventMouseMotion:
+			rotation.y -= event.relative.x / sensitivity
+		
+			$Firstperson.rotation.x -= event.relative.y / sensitivity
+			$Firstperson.rotation.x = clamp($Firstperson.rotation.x, deg_to_rad(-45),deg_to_rad(90))
