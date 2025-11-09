@@ -82,16 +82,17 @@ func start_grid_move(grid_direction: Vector3) -> void:
 		is_moving = false
 
 func _input(event):
+	print('O')
+	if Input.is_action_pressed("jump"):
+		switch_camera()
 	if event is InputEventMouseMotion:
 			rotation.y -= event.relative.x / sensitivity
 		
 			$Firstperson.rotation.x -= event.relative.y / sensitivity
 			$Firstperson.rotation.x = clamp($Firstperson.rotation.x, deg_to_rad(-45),deg_to_rad(90))
+			
 func switch_camera()->void:
-	if get_viewport().getcamera() == $CameraSpringArm.TP_CAM:
-		$Firstperson.FP_CAM.current = true
+	if get_viewport().get_camera() == $FP_CAM:
+		$TP_CAM.make_current()
 	else:
-		$CameraSpringArm.TP_CAM.current = true
-func acutal_switch(event):
-	if Input.is_action_pressed("space"):
-		switch_camera()
+		$FP_CAM.make_current()
