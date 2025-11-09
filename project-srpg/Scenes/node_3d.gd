@@ -3,6 +3,7 @@ extends Node3D
 # This path targets your top-level UI container ('actions') that holds the Panel and Buttons.
 @onready var button_container: Control = $GameHUD/actions 
 @onready var ammo_container: Control = $Ammo
+@onready var crosshair_container: Control = %crosshair
 
 @onready var bullet_label: Label = ammo_container.get_node("PlayerInfoBox2/Label")
 # Called when the node enters the scene tree for the first time.
@@ -20,6 +21,7 @@ func _ready() -> void:
 	if is_instance_valid(button_container):
 		button_container.visible = true
 		ammo_container.visible = false
+		crosshair_container.visible = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -34,11 +36,13 @@ func _on_camera_switched(is_fps: bool) -> void:
 			# Entering FPS/Shoot mode: Hide the entire 'actions' node
 			button_container.visible = false
 			ammo_container.visible = true
+			crosshair_container.visible = true
 			print("UI Hidden: Entered FPS Mode.")
 		else:
 			# Exiting FPS mode / Returning to TP mode: Show the entire 'actions' node
 			button_container.visible = true
 			ammo_container.visible = false
+			crosshair_container.visible = false
 			print("UI Visible: Returned to TP Mode.")
 	else:
 		# Error handling for debugging
