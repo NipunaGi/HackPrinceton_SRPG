@@ -126,9 +126,10 @@ func _fire():
 	if Input.is_action_pressed("fire"):
 		#if not anim_player.is_playing():
 			#if ray_cast.is_colliding():
-				
+				#var target = ray_cast.get_collider()
+				#if target.is_in_group("Enemy"):
+					#target.health -= 10
 		anim_player.play("Assault_Fire")
-		
 		is_firing = true
 	else:
 		if is_firing:
