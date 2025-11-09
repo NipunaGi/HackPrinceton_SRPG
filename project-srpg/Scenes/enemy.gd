@@ -23,6 +23,7 @@ func enemy_turn():
 # ----- Enemy Damage -----------------
 func take_damage(amount: int):
 	health -= amount
+	print("OUCH IM AT", health)
 	# Enemy Death Check
 	if health <= 0:
 		die()
