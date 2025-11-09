@@ -1,143 +1,77 @@
-[gd_scene load_steps=18 format=3 uid="uid://dqkpc1ym06crh"]
+[gd_scene load_steps=12 format=3 uid="uid://dqkpc1ym06crh"]
 
-[ext_resource type="Script" uid="uid://cgso6b777sf82" path="res://Scripts/Player.gd" id="1_a202f"]
-[ext_resource type="MeshLibrary" uid="uid://dlohrx1afpxsl" path="res://Blocks/blocks.tres" id="1_okq71"]
-[ext_resource type="Script" path="res://Scenes/node_3d.gd" id="1_worak"]
-[ext_resource type="Script" uid="uid://6x73jqbnk6om" path="res://Scripts/MouseLook.gd" id="2_noarx"]
-[ext_resource type="PackedScene" uid="uid://bv83clv528qmb" path="res://Assets/GoldenBlaster.glb" id="3_a8auw"]
-[ext_resource type="Script" uid="uid://c1xv02ncl6uff" path="res://Scenes/enemy.gd" id="4_wosnj"]
-[ext_resource type="PackedScene" uid="uid://dhw7bpk3dt66o" path="res://UI/crosshair.tscn" id="5_ifh66"]
-[ext_resource type="PackedScene" uid="uid://c1kpymc87y2b8" path="res://UI/permanent.tscn" id="5_t3l2h"]
-[ext_resource type="PackedScene" uid="uid://nma70vipug8x" path="res://UI/actions.tscn" id="6_aeo3b"]
+[ext_resource type="Script" uid="uid://ds1uyuifatxx4" path="res://UI/actions.gd" id="1_cb6ip"]
+[ext_resource type="Texture2D" uid="uid://lbmms6qxulhc" path="res://UI/button_shoot_regular.png" id="2_vudi7"]
+[ext_resource type="Texture2D" uid="uid://bxprwscepoq5u" path="res://UI/button_shoot_hover.png" id="3_1vwyg"]
+[ext_resource type="Texture2D" uid="uid://drtio560ngxss" path="res://UI/button_shoot_disabled.png" id="4_ahc04"]
+[ext_resource type="Texture2D" uid="uid://07xs428cxwn" path="res://UI/button_move_regular.png" id="5_8cye3"]
+[ext_resource type="Texture2D" uid="uid://cs4xene3hiu44" path="res://UI/button_move_hover.png" id="6_062e5"]
+[ext_resource type="Texture2D" uid="uid://7p1amjtvrto7" path="res://UI/button_move_disabled.png" id="7_m2rse"]
+[ext_resource type="Script" uid="uid://c2pvu23rgw0lc" path="res://UI/move.gd" id="8_rl1jb"]
+[ext_resource type="Texture2D" uid="uid://bmv73hlxkiy6v" path="res://UI/button_guard_regular.png" id="9_58eop"]
+[ext_resource type="Texture2D" uid="uid://yrgv37sr2all" path="res://UI/button_guard_hover.png" id="10_nivdu"]
+[ext_resource type="Texture2D" uid="uid://blbuqbhcpkd6f" path="res://UI/button_guard_disabled.png" id="11_4wftv"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_a0tk4"]
+[node name="actions" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 4.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_cb6ip")
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_r3fl7"]
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -262.25
+offset_top = -99.0
+offset_right = 262.25
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
 
-[sub_resource type="Animation" id="Animation_t3l2h"]
-resource_name = "Assault_Fire"
-length = 0.2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("FP_CAM/Weapon/GoldenBlaster:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(0.48305255, 0.9332384, -0.6185019), Vector3(0.483, 0.933, -0.5), Vector3(0.483, 0.933, -0.619)]
-}
+[node name="Shoot" type="TextureButton" parent="Panel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 34.75
+offset_top = 18.0
+offset_right = 159.75
+offset_bottom = 68.0
+texture_normal = ExtResource("2_vudi7")
+texture_hover = ExtResource("3_1vwyg")
+texture_disabled = ExtResource("4_ahc04")
 
-[sub_resource type="Animation" id="Animation_a8auw"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("FP_CAM/Weapon/GoldenBlaster:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0.48305255, 0.9332384, -0.6185019)]
-}
+[node name="Move" type="TextureButton" parent="Panel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 199.75
+offset_top = 18.0
+offset_right = 324.75
+offset_bottom = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("5_8cye3")
+texture_hover = ExtResource("6_062e5")
+texture_disabled = ExtResource("7_m2rse")
+script = ExtResource("8_rl1jb")
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_ifh66"]
-_data = {
-&"Assault_Fire": SubResource("Animation_t3l2h"),
-&"RESET": SubResource("Animation_a8auw")
-}
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wosnj"]
-vertex_color_is_srgb = true
-albedo_color = Color(1, 0, 0, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_t3l2h"]
-material = SubResource("StandardMaterial3D_wosnj")
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a8auw"]
-
-[node name="Node3D" type="Node3D"]
-script = ExtResource("1_worak")
-
-[node name="Map" type="Node3D" parent="."]
-
-[node name="GridMap" type="GridMap" parent="Map"]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
-mesh_library = ExtResource("1_okq71")
-cell_center_x = false
-cell_center_y = false
-cell_center_z = false
-data = {
-"cells": PackedInt32Array(-2, 65534, 0, -2, 65535, 0, -2, 0, 0, -2, 1, 0, -1, 65534, 0, -1, 65535, 0, -1, 0, 0, -1, 1, 0, -65536, 65534, 0, -65536, 65535, 0, -65536, 0, 0, -65536, 1, 0, -65535, 65534, 0, -65535, 65535, 0, -65535, 0, 0, -65535, 1, 0, -2, 2, 0, -1, 2, 0, -65536, 2, 0, -65534, 65535, 0, -65534, 0, 0, -65534, 1, 0, -65534, 2, 0, -65535, 2, 0, -2, 3, 0, -1, 3, 0, -65536, 3, 0, -65535, 3, 0, -65534, 3, 0, -65533, 3, 0, -65533, 2, 0, -65533, 1, 0, -65533, 0, 0, -65533, 65535, 0, -65533, 65534, 0, -65534, 65534, 0, -65533, 65533, 0, -65533, 65532, 0, -65534, 65532, 0, -65534, 65531, 0, -5, 65535, 0, -5, 0, 0, -5, 2, 0, -5, 3, 0, -4, 3, 0, -3, 3, 0, -4, 2, 0, -5, 1, 0, -4, 1, 0, -3, 0, 0, -4, 65535, 0, -4, 65534, 0, -4, 65533, 0, -5, 65533, 0, -5, 65532, 0, -5, 65531, 0, -4, 65531, 0, -4, 65532, 0, -3, 65532, 0, -2, 65532, 0, -1, 65532, 0, -65536, 65532, 0, -65535, 65532, 0, -65535, 65531, 0, -1, 65531, 0, -3, 65531, 0, -65535, 65533, 0, -65534, 65533, 0, -65536, 65533, 0, -1, 65533, 0, -2, 65533, 0, -3, 65533, 0, -4, 0, 0, -3, 1, 0, -3, 2, 0, -3, 65535, 0, -3, 65534, 0, -5, 65534, 0, -2, 65531, 0, -65536, 65531, 0, -65532, 0, 0, -65532, 65535, 0, -65532, 65534, 0, -65532, 65533, 0, -65532, 65532, 0, -65532, 1, 0, -65532, 2, 0, -65532, 3, 0, -65536, 4, 0, -65535, 4, 0, -65534, 4, 0, -65533, 4, 0, -65531, 3, 0, -65532, 4, 0, -65531, 4, 0, -65531, 2, 0, -65531, 1, 0, -65531, 0, 0, -65531, 65535, 0, -65531, 65534, 0, -65531, 65533, 0, -65531, 65532, 0, -65531, 65531, 0, -65533, 65531, 0, -65532, 65531, 0, -1, 4, 0, -2, 4, 0, -3, 4, 0, -4, 4, 0, -5, 4, 0, -5, 5, 0, -4, 5, 0, -3, 5, 0, -2, 5, 0, -1, 5, 0, -65536, 5, 0, -65535, 5, 0, -65534, 5, 0, -65533, 5, 0, -65532, 5, 0, -65531, 5, 0, 4, 0, 0)
-}
-metadata/_editor_floor_ = Vector3(0, -3, 0)
-
-[node name="Player" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50696397, 0)
-script = ExtResource("1_a202f")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("CapsuleMesh_a0tk4")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_r3fl7")
-
-[node name="RayCast3D" type="RayCast3D" parent="Player"]
-
-[node name="Firstperson" type="Node3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4209299, 0.96580076, 0)
-
-[node name="FP_CAM" type="Camera3D" parent="Player/Firstperson"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23883772, 0.31898093, 0)
-current = true
-
-[node name="Weapon" type="Node3D" parent="Player/Firstperson/FP_CAM"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18209219, -1.2847817, 0)
-
-[node name="GoldenBlaster" parent="Player/Firstperson/FP_CAM/Weapon" instance=ExtResource("3_a8auw")]
-transform = Transform3D(-0.025520256, 0, 0.1983651, 0, 0.2, 0, -0.1983651, 0, -0.025520256, 0.48305255, 0.9332384, -0.6185019)
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Firstperson"]
-libraries = {
-&"": SubResource("AnimationLibrary_ifh66")
-}
-
-[node name="CameraSpringArm" type="SpringArm3D" parent="."]
-transform = Transform3D(0.8660254, 0.35355338, 0.35355338, 0, 0.70710677, -0.70710677, -0.5, 0.6123724, 0.6123724, 0, 7.5216584, 0)
-spring_length = -15.0
-script = ExtResource("2_noarx")
-
-[node name="TP_CAM" type="Camera3D" parent="CameraSpringArm"]
-transform = Transform3D(-1, 5.9604645e-08, -1.1920929e-07, 2.9802322e-08, 1.0000001, 0, 8.940697e-08, 0, -1.0000001, 0.3696588, -0.619267, 0.9210925)
-current = true
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-5.9604645e-08, -0.86602545, 0.49999994, -1.4901161e-08, 0.49999994, 0.86602545, -1, 5.9604645e-08, -1.4901161e-08, 10, 7, 2)
-
-[node name="Enemy" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.43389, 0, 19.226671)
-up_direction = Vector3(0.09900619, 0.009950371, 0.9950371)
-script = ExtResource("4_wosnj")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Enemy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 1)
-mesh = SubResource("CapsuleMesh_t3l2h")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 1)
-shape = SubResource("CapsuleShape3D_a8auw")
-
-[node name="crosshair" parent="." instance=ExtResource("5_ifh66")]
-
-[node name="PlayerStatsUI" parent="." instance=ExtResource("5_t3l2h")]
-
-[node name="GameHUD" type="CanvasLayer" parent="."]
-layer = 20
-
-[node name="actions" parent="GameHUD" instance=ExtResource("6_aeo3b")]
+[node name="TextureButton" type="TextureButton" parent="Panel"]
+layout_mode = 0
+offset_left = 364.75
+offset_top = 18.0
+offset_right = 489.75
+offset_bottom = 68.0
+texture_normal = ExtResource("9_58eop")
+texture_hover = ExtResource("10_nivdu")
+texture_disabled = ExtResource("11_4wftv")
