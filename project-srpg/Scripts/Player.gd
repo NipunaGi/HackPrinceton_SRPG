@@ -54,7 +54,7 @@ func start_grid_move(grid_direction: Vector3) -> void:
 	
 	# RayCast to check for walls
 	# check from a bit inside the player to avoid hitting the floor
-	var ray_origin = Vector3(0, global_position.y - 0.5, 0) 
+	var ray_origin = Vector3(0, 0.5, 0) 
 	ray_cast.position = ray_origin
 	ray_cast.target_position = grid_direction * grid_size
 	ray_cast.force_raycast_update()
