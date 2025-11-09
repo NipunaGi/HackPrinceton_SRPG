@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://dqkpc1ym06crh"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4xowi"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a202f"]
+size = Vector3(228.69275, 3.4095576, 232.69897)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4xowi"]
+albedo_color = Color(0.9657324, 0.31379429, 0.63988966, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_a202f"]
+
+[node name="platefrom" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.55548596, -0.6911749, 0.46229067, -0.07791136, 0.5967712, 0.7986201, -0.82786787, 0.40760452, -0.38534838, -33.143494, 71.77878, 24.913725)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.887727, -0.46037018, 0, 0.46037018, 0.887727, 0.7273216, 1.6227007, 2.4276161)
+fov = 1.0
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+physics_material_override = SubResource("PhysicsMaterial_4xowi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6331024, -1.3735331, 5.5057907)
+shape = SubResource("BoxShape3D_a202f")
+debug_color = Color(1, 1, 1, 0.41960785)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+material_override = SubResource("StandardMaterial3D_4xowi")
+mesh = SubResource("PlaneMesh_a202f")
