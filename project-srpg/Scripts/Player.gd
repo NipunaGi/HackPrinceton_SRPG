@@ -110,6 +110,8 @@ func _physics_process(delta: float) -> void:
 	if not is_moving:
 		_fire()
 	
+	update_raycast_alignment()
+	
 	# Gravity
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -149,17 +151,31 @@ func _input(event):
 	if Input.is_action_pressed("jump"):
 		switch_camera()
 
+# ------------------ RayCast Alignment --------------------
+func update_raycast_alignment():
+	if get_viewport().get_camera_3d() != fp_cam:
+		ray_cast.enabled = false
+		return
+
+	var forward_vector = -fp_cam.global_transform.basis.z
+	ray_cast.target_position = forward_vector * 1000.0 
+	ray_cast.enabled = true
+
 # ------------------ Fire Weapon --------------------
 func _fire():
 	if is_moving:
 		return
 	if Input.is_action_pressed("fire"):
-		#if not anim_player.is_playing():
-			#if ray_cast.is_colliding():
-				#var target = ray_cast.get_collider()
-				#if target.is_in_group("Enemy"):
-					#target.health -= 10
-		anim_player.play("Assault_Fire")
+		if not anim_player.is_playing():
+			anim_player.play("Assault_Fire")
+		
+		# --- DAMAGE LOGIC ----------------------
+		ray_cast.force_raycast_update()
+		if ray_cast.is_colliding():
+			var target = ray_cast.get_collider()
+			if target.is_in_group("Enemy"):
+				target.take_damage(1)
+		# ---------------------------------------
 		is_firing = true
 	else:
 		if is_firing:

@@ -1,21 +1,20 @@
-# Enemy Script (Attached to the node hit by the raycast)
 extends CharacterBody3D
 
+## Enemy Properties
 @export var health: int = 15
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
-const SPEED = 5.0
 func _ready():
 	add_to_group("Enemy")
 	
-func _process(delta: float) -> void:
-	if health <= 0:
-		print("Enemy destroyed!")
-		queue_free()
 
-func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-# Optional: Preferred method for applying damage
 func take_damage(amount: int):
 	health -= amount
+	print("Enemy hit! Health remaining: ", health) # TEMP CHECK
+	
+	if health <= 0:
+		die()
+
+func die():
+	print("Enemy destroyed!")
+	queue_free()
