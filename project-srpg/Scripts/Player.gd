@@ -30,6 +30,7 @@ extends CharacterBody3D
 @onready var parent: Node3D = $Firstperson
 @onready var mesh: Node3D = $MeshInstance3D
 @onready var tp_cam: Camera3D = $"../CameraSpringArm/TP_CAM"
+@onready var anim_player: AnimationPlayer = $"Firstperson/AnimationPlayer"
 
 # Line visualization
 var line_mesh_instance: MeshInstance3D
@@ -40,6 +41,7 @@ var is_hovering_for_move: bool = false
 
 # State
 var is_moving = false
+var is_firing = false
 var tilted_left = false
 var tilted_right = false
 var original_x = 0.0
@@ -66,6 +68,10 @@ func _ready() -> void:
 		create_range_indicator()
 
 func _physics_process(delta: float) -> void:
+	#Fire Weapon
+	if not is_moving:
+		_fire()
+	
 	# Gravity
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -88,7 +94,7 @@ func _physics_process(delta: float) -> void:
 
 func _input(event):
 	# Mouse look (FP_CAM only rotates locally)
-	if event is InputEventMouseMotion:
+	if event is InputEventMouseMotion and !(is_moving):
 		# Rotate the parent for horizontal look
 		parent.rotation.y -= event.relative.x / sensitivity
 		
@@ -97,21 +103,41 @@ func _input(event):
 		fp_cam.rotation.x = clamp(fp_cam.rotation.x, deg_to_rad(-45), deg_to_rad(90))
 		
 		# Limit horizontal rotation based on tilt state
-		if tilted_left:
+		if tilted_left and !(is_moving):
 			# When tilted left, can only look left and forward (prevent looking right at body)
 			parent.rotation.y = max(parent.rotation.y, 0.0)
-		elif tilted_right:
+		elif tilted_right and !(is_moving):
 			# When tilted right, can only look right and forward (prevent looking left at body)
 			parent.rotation.y = min(parent.rotation.y, 0.0)
-
+	
 	# Point-and-click movement
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+	if _left_click(event):
 		if get_viewport().get_camera_3d() == tp_cam:
 			move_to_clicked_tile(event.position)
 
 	# Camera switch
 	if Input.is_action_pressed("jump"):
 		switch_camera()
+
+# ------------------ Fire Weapon --------------------
+func _fire():
+	if is_moving:
+		return
+	if Input.is_action_pressed("fire"):
+		#if not anim_player.is_playing():
+			#if ray_cast.is_colliding():
+				
+		anim_player.play("Assault_Fire")
+		
+		is_firing = true
+	else:
+		if is_firing:
+			anim_player.stop()
+			is_firing = false
+
+# ------------------ Left Click Action --------------
+func _left_click(event):
+	return event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
 
 # ------------------ Movement Line ------------------
 
@@ -416,6 +442,10 @@ func start_grid_move(target_position: Vector3) -> void:
 # ------------------ Tilt / Peek ------------------
 
 func handle_tilt(delta: float) -> void:
+	# Third-Person Camera
+	if get_viewport().get_camera_3d() == tp_cam:
+		return
+		
 	# Tilt Left
 	if Input.is_action_just_pressed("tiltLeft") and not tilted_left:
 		# When starting left tilt, clamp rotation to left side only (prevent looking right)
