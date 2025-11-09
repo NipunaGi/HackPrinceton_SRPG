@@ -6,7 +6,7 @@ extends CharacterBody3D
 @export var move_range = 3 # 3x3 grid (1 tile away)
 
 # ----- Camera / Tilt -----
-@export var sensitivity = 100
+@export var sensitivity = 500
 @export var camera_tilt = 1.0
 @export var peek_offset = 3.0
 
@@ -89,9 +89,20 @@ func _physics_process(delta: float) -> void:
 func _input(event):
 	# Mouse look (FP_CAM only rotates locally)
 	if event is InputEventMouseMotion:
+		# Rotate the parent for horizontal look
 		parent.rotation.y -= event.relative.x / sensitivity
+		
+		# Vertical look
 		fp_cam.rotation.x -= event.relative.y / sensitivity
 		fp_cam.rotation.x = clamp(fp_cam.rotation.x, deg_to_rad(-45), deg_to_rad(90))
+		
+		# Limit horizontal rotation based on tilt state
+		if tilted_left:
+			# When tilted left, can only look left and forward (prevent looking right at body)
+			parent.rotation.y = max(parent.rotation.y, 0.0)
+		elif tilted_right:
+			# When tilted right, can only look right and forward (prevent looking left at body)
+			parent.rotation.y = min(parent.rotation.y, 0.0)
 
 	# Point-and-click movement
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -407,6 +418,10 @@ func start_grid_move(target_position: Vector3) -> void:
 func handle_tilt(delta: float) -> void:
 	# Tilt Left
 	if Input.is_action_just_pressed("tiltLeft") and not tilted_left:
+		# When starting left tilt, clamp rotation to left side only (prevent looking right)
+		if parent.rotation.y < 0.0:
+			parent.rotation.y = 0.0
+		
 		var tween = create_tween()
 		tween.tween_property(fp_cam, "rotation:z", deg_to_rad(camera_tilt), 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		tween.tween_property(parent, "position:x", original_x - peek_offset, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -416,6 +431,10 @@ func handle_tilt(delta: float) -> void:
 
 	# Tilt Right
 	if Input.is_action_just_pressed("tiltRight") and not tilted_right:
+		# When starting right tilt, clamp rotation to right side only (prevent looking left)
+		if parent.rotation.y > 0.0:
+			parent.rotation.y = 0.0
+		
 		var tween = create_tween()
 		tween.tween_property(fp_cam, "rotation:z", deg_to_rad(-camera_tilt), 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		tween.tween_property(parent, "position:x", original_x + peek_offset, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
